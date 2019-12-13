@@ -3,6 +3,7 @@ package com.youngseok.bankwebservice.domain.customer;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,23 @@ public class CustomerRepositoryTest {
 		
 		//then
 		Customer cus = cusList.get(0);
-		assertThat(cus.getCustomerName(), is("Youngsok"));
+		assertThat(cus.getCustomerName(), is("NAME1"));
 	}
+	
+	@Test
+    public void BaseTimeEntity_register () {
+        //given
+        LocalDateTime now = LocalDateTime.now();
+        customerRepository.save(Customer.builder()
+                .customerName("abc")
+                .build());
+        //when
+        List<Customer> cusList = customerRepository.findAll();
+
+        //then
+        Customer cus = cusList.get(0);
+        assertTrue(cus.getCreatedDate().isBefore(now));
+        assertTrue(cus.getModifiedDate().isBefore(now));
+    }
 
 }
